@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="logPath" value="D:\\express"/>
+    <property name="projectLogName" value="express-manage_"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--dev encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
+            by default -->
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %-5level [%thread] %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志文件 appender定义 -->
+    <appender name="appInfoAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${logPath}/${projectLogName}Info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logPath}/history/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.${projectLogName}Info.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %-5level [%thread] %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appSQLAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${logPath}/${projectLogName}Sql.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logPath}/history/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.${projectLogName}Sql.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="appCostTimeAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${logPath}/${projectLogName}CostTime.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logPath}/history/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.${projectLogName}CostTime.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- error日志 -->
+    <appender name="appErrorAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logPath}/${projectLogName}Error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/history/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.${projectLogName}Error.log
+            </FileNamePattern>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%d %-5level [%thread] %logger{68} %line - %msg%n</Pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 只打印错误日志 -->
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <appender name="appOtherInfoAppender"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <File>${logPath}/${projectLogName}Other.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${logPath}/history/%d{yyyy-MM,aux}/%d{yyyy-MM-dd}.${projectLogName}Other.log
+            </fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %-5level [%thread] %logger{36} %line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.eightbyte" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="appInfoAppender"/>
+        <appender-ref ref="appErrorAppender"/>
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.eightbyte.mapper" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="appSQLAppender"/>
+    </logger>
+
+    <logger name="com.eightbyte.interceptors.TimeCostInterceptor" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="appCostTimeAppender"/>
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+
+    <logger name="org.apache" additivity="false">
+        <level value="ERROR"/>
+        <appender-ref ref="appErrorAppender"/>
+    </logger>
+    <logger name="com.alibaba" additivity="false">
+        <level value="ERROR"/>
+        <appender-ref ref="appErrorAppender"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="appInfoAppender"/>
+        <appender-ref ref="appErrorAppender"/>
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
