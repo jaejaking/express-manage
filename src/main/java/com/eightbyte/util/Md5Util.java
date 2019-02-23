@@ -38,7 +38,7 @@ public class Md5Util {
      * @param md5
      * @return
      */
-    public static String fillMD5(String md5) {
+    private static String fillMD5(String md5) {
         return md5.length() == 32 ? md5 : fillMD5("0" + md5);
     }
 

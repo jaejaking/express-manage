@@ -1,7 +1,6 @@
 package com.eightbyte.controller;
 
 
-
 import com.eightbyte.enumration.ResultCode;
 import com.eightbyte.util.NetWorkUtil;
 import com.eightbyte.vo.ResultVo;
@@ -15,9 +14,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- *
  * @ClassName: BaseController
  * @Description: 基础控制器
  * @author: luxn
@@ -33,12 +32,14 @@ public abstract class BaseController {
     @Autowired
     protected HttpServletRequest request;
 
+    @Autowired
+    protected HttpServletResponse response;
+
     /**
-     *
-     * @Description: 判断请求是否为ajax
      * @param request
-     * @return    设定文件
+     * @return 设定文件
      * @throws 异常说明
+     * @Description: 判断请求是否为ajax
      * @author pangtongtong01 pangtongtong01@baidu.com
      * @date 2014年3月31日 下午1:24:24
      */
@@ -56,10 +57,9 @@ public abstract class BaseController {
     }
 
     /**
-     *
-     * @Description: 返回封装,code=400
      * @param info
      * @return ResultVo
+     * @Description: 返回封装, code=400
      */
     protected ResultVo warn(String info) {
         ResultVo vo = new ResultVo();
@@ -69,10 +69,9 @@ public abstract class BaseController {
     }
 
     /**
-     *
-     * @Description: 返回封装,code=500
      * @param info
      * @return ResultVo
+     * @Description: 返回封装, code=500
      */
     protected ResultVo error(String info) {
         ResultVo vo = new ResultVo();
@@ -82,10 +81,10 @@ public abstract class BaseController {
     }
 
     /**
-     * @Description:返回封装，code=500支持自定义res信息
      * @param info
      * @param res
      * @return ResultVo
+     * @Description:返回封装，code=500支持自定义res信息
      */
     protected ResultVo error(String info, Object res) {
         ResultVo vo = new ResultVo();
@@ -96,41 +95,41 @@ public abstract class BaseController {
     }
 
     /**
-     * @Description: 返回封装，code=0
      * @param info
      * @param res
-     * @return    设定文件
+     * @return 设定文件
+     * @Description: 返回封装，code=0
      */
     protected ResultVo success(Object res) {
         return success(null, res);
     }
 
     /**
-     * @Description:自定义提示信息方法
      * @param code 返回码{@link ResultCode}
      * @param info 页面提示信息
-     * @param res 数据字段          可以为空
+     * @param res  数据字段          可以为空
      * @return ResultVo
+     * @Description:自定义提示信息方法
      */
     protected ResultVo message(String code, String info, Object res) {
         ResultVo vo = new ResultVo();
         vo.setCode(code);
         vo.setInfo(info);
-        if(null != res){
+        if (null != res) {
             vo.setData(res);
         }
         return vo;
     }
 
-    protected ResultVo message(String code,String info){
-        return this.message(code, info,null);
+    protected ResultVo message(String code, String info) {
+        return this.message(code, info, null);
     }
 
     /**
-     * @Description: 返回封装，code=0
      * @param info
      * @param res
-     * @return    设定文件
+     * @return 设定文件
+     * @Description: 返回封装，code=0
      */
     public ResultVo success(String info, Object res) {
         ResultVo vo = new ResultVo();
@@ -140,39 +139,37 @@ public abstract class BaseController {
         } else {
             vo.setInfo(info);
         }
-        if(null != res){
+        if (null != res) {
             vo.setData(res);
         }
         return vo;
     }
 
     /**
-     *
-     * @Description: 异常处理
      * @param e
      * @param request
-     * @return    设定文件
+     * @return 设定文件
      * @throws 异常说明
+     * @Description: 异常处理
      */
     @ResponseBody
-    @ExceptionHandler({ MissingServletRequestParameterException.class, TypeMismatchException.class,
-            ConversionFailedException.class })
+    @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class,
+            ConversionFailedException.class})
     public ResultVo handleConversionFailedException(Exception e) {
         logger.error("参数不正确:", e);
         return warn("参数不正确！");
     }
 
     /**
-     *
-     * @Description:异常处理
      * @param e
-     * @return    设定文件
+     * @return 设定文件
      * @throws 异常说明
+     * @Description:异常处理
      */
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResultVo handleException(Throwable e) {
         logger.error("服务异常:", e);
-        return error("网络异常，请稍后再试！");
+        return error("服务异常！", e.getMessage());
     }
 }

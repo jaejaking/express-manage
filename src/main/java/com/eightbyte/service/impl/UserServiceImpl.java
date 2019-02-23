@@ -7,6 +7,7 @@ import com.eightbyte.domain.UserExample;
 import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.mapper.UserMapper;
 import com.eightbyte.service.UserService;
+import com.eightbyte.util.Md5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,36 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return users.get(0);
+    }
+
+    @Override
+    public boolean questionAnswerRight(String userName, Integer questionId, String answer) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andUsernameEqualTo(userName)
+                .andQuestionIdEqualTo(questionId)
+                .andQuestionAnswerEqualTo(answer);
+        return userMapper.selectByExample(userExample).size() != 0;
+    }
+
+    @Override
+    public int updateUserPassword(String userName, String password) {
+        User user = new User();
+        user.setUpdateTime(new Date());
+        user.setPassword(Md5Util.getMD5(password));
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(userName);
+        return userMapper.updateByExampleSelective(user, userExample);
+    }
+
+    @Override
+    public int updateUserPassword(String userName, String oldPassword, String newPassword) {
+        User user = new User();
+        user.setPassword(Md5Util.getMD5(newPassword));
+        user.setUpdateTime(new Date());
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andUsernameEqualTo(userName)
+                .andPasswordEqualTo(Md5Util.getMD5(oldPassword));
+        return userMapper.updateByExampleSelective(user, userExample);
     }
 }

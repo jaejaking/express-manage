@@ -1,7 +1,9 @@
 package com.eightbyte.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.eightbyte.constant.Constant;
 import com.eightbyte.domain.*;
+import com.eightbyte.enumration.ResultCode;
 import com.eightbyte.mapper.QuestionMapper;
 import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.service.UserService;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -27,6 +30,21 @@ import java.util.List;
 @Api("用户控制器")
 public class UserController extends BaseController {
 
+    /**
+     * 最大用户名长度
+     */
+    private static final Integer MAX_USERNAME_LENGTH = 32;
+
+    /**
+     * 最小用户名长度
+     */
+    private static final Integer MIN_USERNAME_LENGTH = 5;
+
+    /**
+     * MD5后的密码长度
+     */
+    private static final Integer MD5_PASSWORD_LENGTH = 32;
+
     @Autowired
     private UserService userService;
 
@@ -35,6 +53,24 @@ public class UserController extends BaseController {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+
+    private boolean checkUserName(String userName) {
+        if (StringUtils.isEmpty(userName) || userName.length() > MAX_USERNAME_LENGTH || userName.length() < MIN_USERNAME_LENGTH) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private boolean checkPassword(String password) {
+        if (StringUtils.isEmpty(password) || password.length() != MD5_PASSWORD_LENGTH) {
+
+            return false;
+        }
+        return true;
+    }
 
     @PostMapping("/login")
     @ApiOperation(value = "用户登录")
@@ -47,18 +83,22 @@ public class UserController extends BaseController {
     )
     public ResultVo login(String userName, String password) {
         logger.info("login参数，username:{},password:{}", userName, password);
-        if (StringUtils.isBlank(userName) || userName.length() > 32 || userName.length() < 6) {
+        if (!checkUserName(userName)) {
             return error("用户名不合法!");
         }
-        if (StringUtils.isBlank(password) || password.length() != 32) {
+        if (!checkPassword(password)) {
             return error("密码不合法！");
         }
 
         User user = userService.selectUserByUserName(userName);
         if (user == null) {
-            return error("用户名或者密码错误!");
+            return error("用户名错误!");
         }
         if (Md5Util.getMD5(password).equalsIgnoreCase(user.getPassword())) {
+            //登录成功存储用户登录信息
+            HttpSession session = request.getSession(true);
+            session.setAttribute(Constant.LOGIN_SUCCESS_TOKEN, userName);
+            session.setMaxInactiveInterval(60 * 60 * 2);
             return success("登录成功!");
         }
         return error("用户名或者密码错误");
@@ -68,10 +108,10 @@ public class UserController extends BaseController {
     @PostMapping("/register")
     public ResultVo register(String userName, String password, Integer questionId, String answer, String key) {
         logger.info("register请求参数userName:{},passowrd:{},key:{}", userName, password, key);
-        if (StringUtils.isEmpty(userName) || userName.length() > 32 || userName.length() < 6) {
+        if (!checkUserName(userName)) {
             return error("用户名不合法!");
         }
-        if (StringUtils.isEmpty(password) || password.length() != 32) {
+        if (!checkPassword(password)) {
 
             return error("密码不合法！");
         }
@@ -89,10 +129,11 @@ public class UserController extends BaseController {
         if (user != null) {
             return error("用户名已存在!");
         }
-        int rst = userService.insertUser(userName, password, questionId,answer,registerKeys.get(0).getId());
+        int rst = userService.insertUser(userName, password, questionId, answer, registerKeys.get(0).getId());
         if (rst > 0) {
             return success("注册成功!");
         }
+
 
         return error("注册失败！");
     }
@@ -105,4 +146,76 @@ public class UserController extends BaseController {
         logger.info("获取密保问题信息结果集:{}", JSON.toJSONString(questions));
         return success("查询成功!", questions);
     }
+
+    @PostMapping("/findPassword")
+    public ResultVo forgetPassword(String userName, Integer questionId, String answer, String newPassword) {
+        logger.info("找回密码请求参数\t,userName:{},newPassword:{},questionId:{},answer:{}", userName, newPassword, questionId, answer);
+        if (!checkUserName(userName)) {
+            return error("用户名不合法！");
+        }
+        if (StringUtils.isEmpty(answer) || questionId == null) {
+            return error("请传入密码问题答案!");
+        }
+        if (!checkPassword(newPassword)) {
+            return error("新密码不合法！");
+        }
+        User user = userService.selectUserByUserName(userName);
+        if (user == null) {
+            return error("此用户名不存在!");
+        }
+
+        boolean right = userService.questionAnswerRight(userName, questionId, answer);
+        if (!right) {
+            return error("密保问题选择错误或密保问题答案错误！");
+        }
+        int updateRst = userService.updateUserPassword(userName, newPassword);
+        if (updateRst > 0) {
+            return success("更改密码成功!");
+        }
+        return error("更改密码失败！");
+
+
+    }
+
+    @PostMapping("/changePassword")
+    public ResultVo changePassword(String oldPassword, String newPassword) {
+        logger.info("修改密码参数\t,oldPassword:{},newPassword:{}", oldPassword, newPassword);
+        if (!checkPassword(oldPassword) || !checkPassword(newPassword)) {
+            return error("新密码或旧密码不符合格式!");
+        }
+        HttpSession session = request.getSession(true);
+        Object attribute = session.getAttribute(Constant.LOGIN_SUCCESS_TOKEN);
+        if (attribute == null) {
+            return error("当前用户未登录!");
+        }
+        if (attribute instanceof String) {
+            String userName = (String) attribute;
+            int rst = userService.updateUserPassword(userName, oldPassword, newPassword);
+            if (rst > 0) {
+                return success("密码修改成功!");
+            }
+
+        }
+        return error("密码修改失败!");
+    }
+
+    @GetMapping("/logout")
+    public ResultVo logOut() {
+        HttpSession session = request.getSession(true);
+        session.invalidate();
+        return success("登出成功!");
+
+    }
+
+    @GetMapping("/verifyUserLogin")
+    public ResultVo verifyLogin() {
+        HttpSession session = request.getSession(true);
+        Object attribute = session.getAttribute(Constant.LOGIN_SUCCESS_TOKEN);
+        if (attribute == null) {
+            return new ResultVo(ResultCode.LOGOUT.getCode(),"用户未登录!");
+        }
+
+        return success("用户已登录！");
+    }
+
 }

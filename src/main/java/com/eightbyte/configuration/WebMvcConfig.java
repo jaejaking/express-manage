@@ -1,6 +1,7 @@
 package com.eightbyte.configuration;
 
 import com.eightbyte.interceptor.CrossDomainInterceptor;
+import com.eightbyte.interceptor.LoginInterceptor;
 import com.eightbyte.interceptor.TimeCostInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,9 +20,15 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private CrossDomainInterceptor crossDomainInterceptor;
 
+    @Autowired
+    private LoginInterceptor loginInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(timeCostInterceptor).addPathPatterns("/**");
         registry.addInterceptor(crossDomainInterceptor).addPathPatterns("/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/*/login")
+                .excludePathPatterns("/*/register").excludePathPatterns("/*/verifyUserLogin")
+                .excludePathPatterns("/*/getPasswordQuestionInfos").excludePathPatterns("/*/findPassword");
     }
 }

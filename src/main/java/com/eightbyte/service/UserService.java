@@ -11,4 +11,10 @@ public interface UserService {
 
     User selectUserByUserName(String userName);
 
+    boolean questionAnswerRight(String userName, Integer questionId, String answer);
+
+    int updateUserPassword(String userName, String password);
+
+    int updateUserPassword(String userName, String oldPassword, String newPassword);
+
 }
