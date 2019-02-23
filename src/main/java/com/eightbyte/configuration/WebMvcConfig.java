@@ -29,6 +29,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(crossDomainInterceptor).addPathPatterns("/**");
         registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/*/login")
                 .excludePathPatterns("/*/register").excludePathPatterns("/*/verifyUserLogin")
-                .excludePathPatterns("/*/getPasswordQuestionInfos").excludePathPatterns("/*/findPassword");
+                .excludePathPatterns("/*/getPasswordQuestionInfos").excludePathPatterns("/*/findPassword")
+                .excludePathPatterns("/*/test");
     }
 }

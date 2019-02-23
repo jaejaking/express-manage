@@ -60,24 +60,7 @@
 
 
         <!--数据库对应数据表-->
-        <table tableName="user" domainObjectName="User" enableDeleteByExample="true"
-               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
-               enableSelectByPrimaryKey="true"
-               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
-        </table>
-
-        <table tableName="role" domainObjectName="Role" enableDeleteByExample="true"
-               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
-               enableSelectByPrimaryKey="true"
-               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
-        </table>
-
-        <table tableName="question" domainObjectName="Question" enableDeleteByExample="true"
-               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
-               enableSelectByPrimaryKey="true"
-               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
-        </table>
-        <table tableName="t_register_key" domainObjectName="RegisterKey" enableDeleteByExample="true"
+        <table tableName="t_express_info" domainObjectName="ExpressInfo" enableDeleteByExample="true"
                enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
                enableSelectByPrimaryKey="true"
                enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">

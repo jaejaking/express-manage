@@ -212,10 +212,12 @@ public class UserController extends BaseController {
         HttpSession session = request.getSession(true);
         Object attribute = session.getAttribute(Constant.LOGIN_SUCCESS_TOKEN);
         if (attribute == null) {
-            return new ResultVo(ResultCode.LOGOUT.getCode(),"用户未登录!");
+            return new ResultVo(ResultCode.LOGOUT.getCode(), "用户未登录!");
         }
 
         return success("用户已登录！");
     }
+
+
 
 }

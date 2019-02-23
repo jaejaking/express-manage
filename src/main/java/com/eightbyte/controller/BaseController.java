@@ -6,21 +6,15 @@ import com.eightbyte.util.NetWorkUtil;
 import com.eightbyte.vo.ResultVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionFailedException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @ClassName: BaseController
- * @Description: 基础控制器
- * @author: luxn
- * @date: 2016年1月12日 上午9:38:03
+ * @author yanghaoran@ehomepay.com.cn
+ * @createDate 2019/2/23
+ * @description 基础控制器
  */
 public abstract class BaseController {
 
@@ -37,11 +31,7 @@ public abstract class BaseController {
 
     /**
      * @param request
-     * @return 设定文件
-     * @throws 异常说明
-     * @Description: 判断请求是否为ajax
-     * @author pangtongtong01 pangtongtong01@baidu.com
-     * @date 2014年3月31日 下午1:24:24
+     * @return
      */
     public boolean isAjax(HttpServletRequest request) {
         return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
@@ -95,10 +85,8 @@ public abstract class BaseController {
     }
 
     /**
-     * @param info
      * @param res
-     * @return 设定文件
-     * @Description: 返回封装，code=0
+     * @return
      */
     protected ResultVo success(Object res) {
         return success(null, res);
@@ -145,31 +133,4 @@ public abstract class BaseController {
         return vo;
     }
 
-    /**
-     * @param e
-     * @param request
-     * @return 设定文件
-     * @throws 异常说明
-     * @Description: 异常处理
-     */
-    @ResponseBody
-    @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class,
-            ConversionFailedException.class})
-    public ResultVo handleConversionFailedException(Exception e) {
-        logger.error("参数不正确:", e);
-        return warn("参数不正确！");
-    }
-
-    /**
-     * @param e
-     * @return 设定文件
-     * @throws 异常说明
-     * @Description:异常处理
-     */
-    @ExceptionHandler(Throwable.class)
-    @ResponseBody
-    public ResultVo handleException(Throwable e) {
-        logger.error("服务异常:", e);
-        return error("服务异常！", e.getMessage());
-    }
 }
