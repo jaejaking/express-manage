@@ -4,6 +4,7 @@ import com.eightbyte.util.NetWorkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NamedThreadLocal;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *@createDate  2019/2/19
  *@description 统计api处理耗时
  */
+@Component("timeCostInterceptor")
 public class TimeCostInterceptor implements HandlerInterceptor {
 
     private ThreadLocal<Long> startTimeThreadLocal=new NamedThreadLocal<>("本地线程变量存储消耗时间");

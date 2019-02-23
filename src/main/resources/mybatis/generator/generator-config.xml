@@ -7,7 +7,7 @@
     <properties resource="application-local.properties"/>
 
     <!--指定特定数据库的jdbc驱动jar包的位置 -->
-    <classPathEntry location="D:\ojdbc6.jar"/>
+    <classPathEntry location="D:\mysql.jar"/>
     <context id="default" targetRuntime="MyBatis3">
 
         <!-- optional，旨在创建class时，对注释进行控制 -->
@@ -16,8 +16,8 @@
         </commentGenerator>
 
         <!--jdbc的数据库连接 -->
-        <jdbcConnection driverClass="${first.datasource.driverClassName}" connectionURL="${first.datasource.url}"
-                        userId="${first.datasource.username}" password="${first.datasource.password}">
+        <jdbcConnection driverClass="${express.datasource.driverClassName}" connectionURL="${express.datasource.url}"
+                        userId="${express.datasource.username}" password="${express.datasource.password}">
         </jdbcConnection>
 
         <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制-->
@@ -29,7 +29,7 @@
             targetPackage     指定生成的model生成所在的包名
             targetProject     指定在该项目下所在的路径
         -->
-        <javaModelGenerator targetPackage="com.ehomepay.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.eightbyte.domain" targetProject="src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="true"/>
 
@@ -55,11 +55,29 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator targetPackage="com.ehomepay.dao" targetProject="src/main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.eightbyte.mapper" targetProject="src/main/java" type="XMLMAPPER">
         </javaClientGenerator>
 
+
         <!--数据库对应数据表-->
-        <table tableName="t_merchant_level_limit" domainObjectName="MerchantLevelLimit" enableDeleteByExample="true"
+        <table tableName="user" domainObjectName="User" enableDeleteByExample="true"
+               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
+               enableSelectByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
+        </table>
+
+        <table tableName="role" domainObjectName="Role" enableDeleteByExample="true"
+               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
+               enableSelectByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
+        </table>
+
+        <table tableName="question" domainObjectName="Question" enableDeleteByExample="true"
+               enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
+               enableSelectByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
+        </table>
+        <table tableName="t_register_key" domainObjectName="RegisterKey" enableDeleteByExample="true"
                enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
                enableSelectByPrimaryKey="true"
                enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">
