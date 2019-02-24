@@ -2,8 +2,11 @@ package com.eightbyte.service.impl;
 
 import com.eightbyte.domain.ClientInfo;
 import com.eightbyte.domain.ExpressInfo;
+import com.eightbyte.domain.ExpressInfoExample;
+import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.mapper.ClientInfoMapper;
 import com.eightbyte.mapper.ExpressInfoMapper;
+import com.eightbyte.mapper.ExpressTraceRecordMapper;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.util.ExpressOrderGeneratorUtil;
 import com.eightbyte.vo.ExpressSendVo;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +29,9 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Autowired
     private ClientInfoMapper clientInfoMapper;
+
+    @Autowired
+    private ExpressTraceRecordMapper traceRecordMapper;
 
     @Override
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
@@ -71,5 +78,34 @@ public class ExpressServiceImpl implements ExpressService {
         int insertExpressId = expressInfo.getId();
         log.info("插入快递信息表结果数:{},id:{}", insertExpressResult, insertExpressId);
         return 3;
+    }
+
+    @Override
+    public List<ExpressInfo> searchUndeliverExpressInfos() {
+        ExpressInfoExample expressInfoExample = new ExpressInfoExample();
+        expressInfoExample.createCriteria().andStatusEqualTo(1);
+        return expressInfoMapper.selectByExample(expressInfoExample);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.DEFAULT, transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int updateExpressInfoStatus(int status, List<ExpressInfo> list) {
+        int rst = 0;
+        for (ExpressInfo expressInfo : list) {
+            expressInfo.setStatus(status);
+            rst += expressInfoMapper.updateByPrimaryKeySelective(expressInfo);
+        }
+
+        return rst;
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.DEFAULT, transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public int insertExpressTraceRecord(List<ExpressTraceRecord> records) {
+        int rst = 0;
+        for (ExpressTraceRecord record : records) {
+            rst += traceRecordMapper.insert(record);
+        }
+        return rst;
     }
 }
