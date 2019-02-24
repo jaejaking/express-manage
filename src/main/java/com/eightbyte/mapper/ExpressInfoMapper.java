@@ -2,7 +2,10 @@ package com.eightbyte.mapper;
 
 import com.eightbyte.domain.ExpressInfo;
 import com.eightbyte.domain.ExpressInfoExample;
+
 import java.util.List;
+
+import com.eightbyte.vo.ExpressInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface ExpressInfoMapper {
@@ -93,4 +96,7 @@ public interface ExpressInfoMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ExpressInfo record);
+
+
+    List<ExpressInfoVo> searchExpressInfoVosByStatus(int status);
 }

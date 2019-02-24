@@ -385,143 +385,143 @@ public class ExpressTraceRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andFromIsNull() {
-            addCriterion("from is null");
+        public Criteria andFromAddrIsNull() {
+            addCriterion("from_addr is null");
             return (Criteria) this;
         }
 
-        public Criteria andFromIsNotNull() {
-            addCriterion("from is not null");
+        public Criteria andFromAddrIsNotNull() {
+            addCriterion("from_addr is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFromEqualTo(String value) {
-            addCriterion("from =", value, "from");
+        public Criteria andFromAddrEqualTo(String value) {
+            addCriterion("from_addr =", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotEqualTo(String value) {
-            addCriterion("from <>", value, "from");
+        public Criteria andFromAddrNotEqualTo(String value) {
+            addCriterion("from_addr <>", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromGreaterThan(String value) {
-            addCriterion("from >", value, "from");
+        public Criteria andFromAddrGreaterThan(String value) {
+            addCriterion("from_addr >", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromGreaterThanOrEqualTo(String value) {
-            addCriterion("from >=", value, "from");
+        public Criteria andFromAddrGreaterThanOrEqualTo(String value) {
+            addCriterion("from_addr >=", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromLessThan(String value) {
-            addCriterion("from <", value, "from");
+        public Criteria andFromAddrLessThan(String value) {
+            addCriterion("from_addr <", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromLessThanOrEqualTo(String value) {
-            addCriterion("from <=", value, "from");
+        public Criteria andFromAddrLessThanOrEqualTo(String value) {
+            addCriterion("from_addr <=", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromLike(String value) {
-            addCriterion("from like", value, "from");
+        public Criteria andFromAddrLike(String value) {
+            addCriterion("from_addr like", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotLike(String value) {
-            addCriterion("from not like", value, "from");
+        public Criteria andFromAddrNotLike(String value) {
+            addCriterion("from_addr not like", value, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromIn(List<String> values) {
-            addCriterion("from in", values, "from");
+        public Criteria andFromAddrIn(List<String> values) {
+            addCriterion("from_addr in", values, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotIn(List<String> values) {
-            addCriterion("from not in", values, "from");
+        public Criteria andFromAddrNotIn(List<String> values) {
+            addCriterion("from_addr not in", values, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromBetween(String value1, String value2) {
-            addCriterion("from between", value1, value2, "from");
+        public Criteria andFromAddrBetween(String value1, String value2) {
+            addCriterion("from_addr between", value1, value2, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andFromNotBetween(String value1, String value2) {
-            addCriterion("from not between", value1, value2, "from");
+        public Criteria andFromAddrNotBetween(String value1, String value2) {
+            addCriterion("from_addr not between", value1, value2, "fromAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToIsNull() {
-            addCriterion("to is null");
+        public Criteria andToAddrIsNull() {
+            addCriterion("to_addr is null");
             return (Criteria) this;
         }
 
-        public Criteria andToIsNotNull() {
-            addCriterion("to is not null");
+        public Criteria andToAddrIsNotNull() {
+            addCriterion("to_addr is not null");
             return (Criteria) this;
         }
 
-        public Criteria andToEqualTo(String value) {
-            addCriterion("to =", value, "to");
+        public Criteria andToAddrEqualTo(String value) {
+            addCriterion("to_addr =", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToNotEqualTo(String value) {
-            addCriterion("to <>", value, "to");
+        public Criteria andToAddrNotEqualTo(String value) {
+            addCriterion("to_addr <>", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToGreaterThan(String value) {
-            addCriterion("to >", value, "to");
+        public Criteria andToAddrGreaterThan(String value) {
+            addCriterion("to_addr >", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToGreaterThanOrEqualTo(String value) {
-            addCriterion("to >=", value, "to");
+        public Criteria andToAddrGreaterThanOrEqualTo(String value) {
+            addCriterion("to_addr >=", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToLessThan(String value) {
-            addCriterion("to <", value, "to");
+        public Criteria andToAddrLessThan(String value) {
+            addCriterion("to_addr <", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToLessThanOrEqualTo(String value) {
-            addCriterion("to <=", value, "to");
+        public Criteria andToAddrLessThanOrEqualTo(String value) {
+            addCriterion("to_addr <=", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToLike(String value) {
-            addCriterion("to like", value, "to");
+        public Criteria andToAddrLike(String value) {
+            addCriterion("to_addr like", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToNotLike(String value) {
-            addCriterion("to not like", value, "to");
+        public Criteria andToAddrNotLike(String value) {
+            addCriterion("to_addr not like", value, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToIn(List<String> values) {
-            addCriterion("to in", values, "to");
+        public Criteria andToAddrIn(List<String> values) {
+            addCriterion("to_addr in", values, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToNotIn(List<String> values) {
-            addCriterion("to not in", values, "to");
+        public Criteria andToAddrNotIn(List<String> values) {
+            addCriterion("to_addr not in", values, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToBetween(String value1, String value2) {
-            addCriterion("to between", value1, value2, "to");
+        public Criteria andToAddrBetween(String value1, String value2) {
+            addCriterion("to_addr between", value1, value2, "toAddr");
             return (Criteria) this;
         }
 
-        public Criteria andToNotBetween(String value1, String value2) {
-            addCriterion("to not between", value1, value2, "to");
+        public Criteria andToAddrNotBetween(String value1, String value2) {
+            addCriterion("to_addr not between", value1, value2, "toAddr");
             return (Criteria) this;
         }
 
@@ -585,63 +585,63 @@ public class ExpressTraceRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNull() {
-            addCriterion("status is null");
+        public Criteria andExpressStatusIsNull() {
+            addCriterion("express_status is null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIsNotNull() {
-            addCriterion("status is not null");
+        public Criteria andExpressStatusIsNotNull() {
+            addCriterion("express_status is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Integer value) {
-            addCriterion("status =", value, "status");
+        public Criteria andExpressStatusEqualTo(Integer value) {
+            addCriterion("express_status =", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Integer value) {
-            addCriterion("status <>", value, "status");
+        public Criteria andExpressStatusNotEqualTo(Integer value) {
+            addCriterion("express_status <>", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Integer value) {
-            addCriterion("status >", value, "status");
+        public Criteria andExpressStatusGreaterThan(Integer value) {
+            addCriterion("express_status >", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("status >=", value, "status");
+        public Criteria andExpressStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("express_status >=", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Integer value) {
-            addCriterion("status <", value, "status");
+        public Criteria andExpressStatusLessThan(Integer value) {
+            addCriterion("express_status <", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("status <=", value, "status");
+        public Criteria andExpressStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("express_status <=", value, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Integer> values) {
-            addCriterion("status in", values, "status");
+        public Criteria andExpressStatusIn(List<Integer> values) {
+            addCriterion("express_status in", values, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Integer> values) {
-            addCriterion("status not in", values, "status");
+        public Criteria andExpressStatusNotIn(List<Integer> values) {
+            addCriterion("express_status not in", values, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Integer value1, Integer value2) {
-            addCriterion("status between", value1, value2, "status");
+        public Criteria andExpressStatusBetween(Integer value1, Integer value2) {
+            addCriterion("express_status between", value1, value2, "expressStatus");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("status not between", value1, value2, "status");
+        public Criteria andExpressStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("express_status not between", value1, value2, "expressStatus");
             return (Criteria) this;
         }
 

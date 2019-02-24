@@ -9,6 +9,7 @@ import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.mapper.ExpressTraceRecordMapper;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.util.ExpressOrderGeneratorUtil;
+import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class ExpressServiceImpl implements ExpressService {
                 .orderNo(ExpressOrderGeneratorUtil.generateOrderNo())
                 .createTime(new Date())
                 .updateTime(new Date())
-                .status(0)
+                .status(1)
                 .build();
         int insertExpressResult = expressInfoMapper.insert(expressInfo);
         int insertExpressId = expressInfo.getId();
@@ -88,10 +89,17 @@ public class ExpressServiceImpl implements ExpressService {
     }
 
     @Override
+    public List<ExpressInfoVo> searchExpressInfoVosByStatus(int status) {
+        return expressInfoMapper.searchExpressInfoVosByStatus(status);
+    }
+
+    @Override
     @Transactional(isolation = Isolation.DEFAULT, transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public int updateExpressInfoStatus(int status, List<ExpressInfo> list) {
+    public int updateExpressInfoStatus(int status, List<ExpressInfoVo> list) {
         int rst = 0;
-        for (ExpressInfo expressInfo : list) {
+        for (ExpressInfoVo expressInfoVo : list) {
+            ExpressInfo expressInfo = new ExpressInfo();
+            expressInfo.setId(expressInfoVo.getExpressId());
             expressInfo.setStatus(status);
             rst += expressInfoMapper.updateByPrimaryKeySelective(expressInfo);
         }
