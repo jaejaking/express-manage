@@ -3,6 +3,8 @@ package com.eightbyte.mapper;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.domain.ExpressTraceRecordExample;
 import java.util.List;
+
+import com.eightbyte.vo.TraceRecordCountVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface ExpressTraceRecordMapper {
@@ -93,4 +95,12 @@ public interface ExpressTraceRecordMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ExpressTraceRecord record);
+
+    /**
+     * @return
+     */
+    List<TraceRecordCountVo> selectEveryExpressRecordCount();
+
+
+    ExpressTraceRecord selectMaxTraceRecord(int expressId);
 }

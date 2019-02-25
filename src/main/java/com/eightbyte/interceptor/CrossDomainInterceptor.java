@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 @Component("crossDomainInterceptor")
 public class CrossDomainInterceptor implements HandlerInterceptor {
 
-    @Value("${ajax.origin.value}")
-    private String origin;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o) throws Exception {

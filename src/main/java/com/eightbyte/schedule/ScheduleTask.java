@@ -5,6 +5,7 @@ import com.eightbyte.domain.ExpressInfo;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.vo.ExpressInfoVo;
+import com.eightbyte.vo.TraceRecordCountVo;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -59,12 +63,36 @@ public class ScheduleTask implements InitializingBean {
 
     }
 
+    private void chooseSuitable(ExpressTraceRecord record) {
+        Set<String> history = new HashSet<>(8);
+        String defaultProvinceStr = "山东蓬莱岛";
+        String sendProvinceCityStr = record.getFromAddr();
+        log.info("record:{}", JSON.toJSONString(record));
+        for (; ; ) {
+            Map<String, String> map = addrList.get(random.nextInt(addrList.size()));
+            String princeCityStr = map.get("province").concat(map.get("city"));
+            if (!history.contains(princeCityStr)) {
+                if (princeCityStr != null && !princeCityStr.equalsIgnoreCase(sendProvinceCityStr) && (record.getHistoryAddr().indexOf(princeCityStr) == -1)) {
+                    record.setToAddr(princeCityStr);
+                    break;
+                }
+            }
+            history.add(princeCityStr);
+            if (history.size() >= addrList.size()) {
+                record.setToAddr(defaultProvinceStr);
+                return;
+            }
+        }
+
+    }
+
 
     /**
      * 模拟发货task,每隔两分钟执行一次
      */
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     public void deliverGoodsTask() {
+        log.info("模拟快递发货开始！");
         List<ExpressInfoVo> expressInfoVos = expressService.searchExpressInfoVosByStatus(1);
         if (expressInfoVos.isEmpty()) {
             return;
@@ -75,6 +103,7 @@ public class ScheduleTask implements InitializingBean {
             String sendProvinceCityStr = expressInfoVo.getSendProvince().concat(expressInfoVo.getSendCity());
             String receiveProvinceCityStr = expressInfoVo.getReceiveProvince().concat(expressInfoVo.getReceiveCity());
 
+            expressTraceRecord.setHistoryAddr(sendProvinceCityStr.concat(receiveProvinceCityStr));
             expressTraceRecord.setExpressId(expressInfoVo.getExpressId());
             expressTraceRecord.setExpressOrderNo(expressInfoVo.getExpressOrderNo());
             expressTraceRecord.setFromAddr(expressInfoVo.getSendProvince().concat(expressInfoVo.getSendCity()));
@@ -102,9 +131,44 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟快递运输中转,每十分钟执行1次
      */
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeTransferStatus() {
+        log.info("模拟快递中转开始！");
+        List<ExpressTraceRecord> list = new ArrayList<>(64);
+        List<TraceRecordCountVo> traceRecordCountVos = expressService.selectEveryExpressRecordCount();
+        for (TraceRecordCountVo recordCountVo : traceRecordCountVos) {
+            if (recordCountVo.getRecordCount() > recordCount) {
+                continue;
+            }
+            //设置当前中转到站
+            ExpressTraceRecord expressTraceRecord = expressService.selectMaxTraceRecord(recordCountVo.getExpressId());
+            expressTraceRecord.setIsTo(1);
+            expressTraceRecord.setUpdateTime(new Date());
+            int rst = expressService.updateById(expressTraceRecord);
+            log.info("updateById：{}", rst);
 
+
+            ExpressTraceRecord record = new ExpressTraceRecord();
+            record.setFromAddr(expressTraceRecord.getToAddr());
+            expressTraceRecord.setFromAddr(record.getFromAddr());
+            chooseSuitable(expressTraceRecord);
+            record.setHistoryAddr(expressTraceRecord.getHistoryAddr().concat(expressTraceRecord.getToAddr()));
+            record.setIsTo(0);
+            record.setExpressStatus(0);
+            record.setExpressId(expressTraceRecord.getExpressId());
+            record.setExpressOrderNo(expressTraceRecord.getExpressOrderNo());
+            record.setUpdateTime(new Date());
+            record.setCreateTime(new Date());
+            record.setToAddr(expressTraceRecord.getToAddr());
+
+            list.add(record);
+
+        }
+        if (!list.isEmpty()) {
+            int rst = expressService.insertExpressTraceRecord(list);
+            log.info("批量插入:{}", rst);
+        }
     }
 
 

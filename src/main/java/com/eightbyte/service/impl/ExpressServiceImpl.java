@@ -1,9 +1,6 @@
 package com.eightbyte.service.impl;
 
-import com.eightbyte.domain.ClientInfo;
-import com.eightbyte.domain.ExpressInfo;
-import com.eightbyte.domain.ExpressInfoExample;
-import com.eightbyte.domain.ExpressTraceRecord;
+import com.eightbyte.domain.*;
 import com.eightbyte.mapper.ClientInfoMapper;
 import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.mapper.ExpressTraceRecordMapper;
@@ -11,6 +8,7 @@ import com.eightbyte.service.ExpressService;
 import com.eightbyte.util.ExpressOrderGeneratorUtil;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
+import com.eightbyte.vo.TraceRecordCountVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,4 +114,21 @@ public class ExpressServiceImpl implements ExpressService {
         }
         return rst;
     }
+
+    @Override
+    public List<TraceRecordCountVo> selectEveryExpressRecordCount() {
+        return traceRecordMapper.selectEveryExpressRecordCount();
+    }
+
+    @Override
+    public ExpressTraceRecord selectMaxTraceRecord(int expressId) {
+        return traceRecordMapper.selectMaxTraceRecord(expressId);
+    }
+
+    @Override
+    public int updateById(ExpressTraceRecord record) {
+        return traceRecordMapper.updateByPrimaryKeySelective(record);
+    }
+
+
 }

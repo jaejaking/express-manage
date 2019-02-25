@@ -4,6 +4,7 @@ import com.eightbyte.domain.ExpressInfo;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
+import com.eightbyte.vo.TraceRecordCountVo;
 
 import java.util.List;
 
@@ -19,5 +20,9 @@ public interface ExpressService {
 
     int insertExpressTraceRecord(List<ExpressTraceRecord> records);
 
+    List<TraceRecordCountVo> selectEveryExpressRecordCount();
 
+    ExpressTraceRecord selectMaxTraceRecord(int expressId);
+
+   int updateById(ExpressTraceRecord record);
 }

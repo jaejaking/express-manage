@@ -3,7 +3,6 @@ package com.eightbyte;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.mapper.ExpressTraceRecordMapper;
 import com.eightbyte.service.UserService;
-import lombok.ToString;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -525,6 +525,76 @@ public class ExpressTraceRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andHistoryAddrIsNull() {
+            addCriterion("history_addr is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrIsNotNull() {
+            addCriterion("history_addr is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrEqualTo(String value) {
+            addCriterion("history_addr =", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrNotEqualTo(String value) {
+            addCriterion("history_addr <>", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrGreaterThan(String value) {
+            addCriterion("history_addr >", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrGreaterThanOrEqualTo(String value) {
+            addCriterion("history_addr >=", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrLessThan(String value) {
+            addCriterion("history_addr <", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrLessThanOrEqualTo(String value) {
+            addCriterion("history_addr <=", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrLike(String value) {
+            addCriterion("history_addr like", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrNotLike(String value) {
+            addCriterion("history_addr not like", value, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrIn(List<String> values) {
+            addCriterion("history_addr in", values, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrNotIn(List<String> values) {
+            addCriterion("history_addr not in", values, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrBetween(String value1, String value2) {
+            addCriterion("history_addr between", value1, value2, "historyAddr");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryAddrNotBetween(String value1, String value2) {
+            addCriterion("history_addr not between", value1, value2, "historyAddr");
+            return (Criteria) this;
+        }
+
         public Criteria andIsToIsNull() {
             addCriterion("is_to is null");
             return (Criteria) this;
