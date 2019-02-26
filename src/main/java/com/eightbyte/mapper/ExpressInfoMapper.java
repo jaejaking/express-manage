@@ -99,4 +99,6 @@ public interface ExpressInfoMapper {
 
 
     List<ExpressInfoVo> searchExpressInfoVosByStatus(int status);
+
+    ExpressInfoVo searchExpressInfoVoById(int id);
 }

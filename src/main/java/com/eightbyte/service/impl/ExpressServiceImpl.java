@@ -92,6 +92,11 @@ public class ExpressServiceImpl implements ExpressService {
     }
 
     @Override
+    public ExpressInfoVo searchExpressInfoVosById(int id) {
+        return expressInfoMapper.searchExpressInfoVoById(id);
+    }
+
+    @Override
     @Transactional(isolation = Isolation.DEFAULT, transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public int updateExpressInfoStatus(int status, List<ExpressInfoVo> list) {
         int rst = 0;
@@ -123,6 +128,16 @@ public class ExpressServiceImpl implements ExpressService {
     @Override
     public ExpressTraceRecord selectMaxTraceRecord(int expressId) {
         return traceRecordMapper.selectMaxTraceRecord(expressId);
+    }
+
+    @Override
+    public int updateExpressInfoSelectiveById(ExpressInfo expressInfo) {
+        return expressInfoMapper.updateByPrimaryKeySelective(expressInfo);
+    }
+
+    @Override
+    public ExpressInfo selectExpressInfoById(int id) {
+        return expressInfoMapper.selectByPrimaryKey(id);
     }
 
     @Override

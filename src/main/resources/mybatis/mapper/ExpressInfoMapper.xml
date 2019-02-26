@@ -49,6 +49,25 @@
           and status = #{status,jdbcType=INTEGER}
 
     </select>
+
+    <select id="searchExpressInfoVoById" parameterType="int" resultMap="ExpressInfoVoMap">
+        SELECT
+            te.id,
+            te.order_no,
+            te.status,
+            tcs.province send_province,
+            tcs.city     send_city,
+            tcs.district send_district,
+            tcr.province receive_province,
+            tcr.city     receive_city,
+            tcr.district receive_district
+        from t_client_info tcs,
+             t_express_info te,
+             t_client_info tcr
+        where te.send_people_id = tcs.id
+          and te.receive_people_id = tcr.id
+          and te.id = #{id,jdbcType=INTEGER}
+    </select>
     <sql id="Example_Where_Clause">
         <!--
           WARNING - @mbg.generated

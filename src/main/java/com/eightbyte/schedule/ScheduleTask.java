@@ -2,10 +2,15 @@ package com.eightbyte.schedule;
 
 import com.alibaba.fastjson.JSON;
 import com.eightbyte.domain.ExpressInfo;
+import com.eightbyte.domain.ExpressInfoExample;
 import com.eightbyte.domain.ExpressTraceRecord;
+import com.eightbyte.domain.ExpressTraceRecordExample;
+import com.eightbyte.mapper.ExpressInfoMapper;
+import com.eightbyte.mapper.ExpressTraceRecordMapper;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.TraceRecordCountVo;
+import com.eightbyte.vo.TraceRecordVo;
 import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -34,6 +39,14 @@ public class ScheduleTask implements InitializingBean {
 
     @Autowired
     private ExpressService expressService;
+
+
+    @Autowired
+    private ExpressTraceRecordMapper traceRecordMapper;
+
+    @Autowired
+    private ExpressInfoMapper expressInfoMapper;
+
 
     @Value("${max.record.count}")
     private Integer recordCount;
@@ -138,7 +151,7 @@ public class ScheduleTask implements InitializingBean {
         List<ExpressTraceRecord> list = new ArrayList<>(64);
         List<TraceRecordCountVo> traceRecordCountVos = expressService.selectEveryExpressRecordCount();
         for (TraceRecordCountVo recordCountVo : traceRecordCountVos) {
-            if (recordCountVo.getRecordCount() > recordCount) {
+            if (recordCountVo.getRecordCount() > recordCount - 1) {
                 continue;
             }
             //设置当前中转到站
@@ -173,11 +186,43 @@ public class ScheduleTask implements InitializingBean {
 
 
     /**
-     * 模拟将已到达目的地快递状态变为待取货,每15分钟执行一次
+     * 模拟将已到达目的地快递状态变为已到达,每15分钟执行一次
      */
     @Scheduled(cron = "0 */15 * * * ?")
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeArrived2Ready4Get() {
+        log.info("改变快递状态为已到达开始！");
+        List<TraceRecordCountVo> traceRecordCountVos = expressService.selectEveryExpressRecordCount();
+        for (TraceRecordCountVo recordCountVo : traceRecordCountVos) {
+            if (recordCountVo.getRecordCount() >= recordCount) {
+                ExpressInfo expressInfo = new ExpressInfo();
+                expressInfo.setId(recordCountVo.getExpressId());
+                expressInfo.setStatus(3);
+                expressInfo.setUpdateTime(new Date());
+                expressService.updateExpressInfoSelectiveById(expressInfo);
 
+                ExpressInfoVo exVo = expressService.searchExpressInfoVosById(recordCountVo.getExpressId());
+
+                ExpressTraceRecord expressTraceRecord = expressService.selectMaxTraceRecord(recordCountVo.getExpressId());
+                expressTraceRecord.setIsTo(1);
+                expressTraceRecord.setToAddr(exVo.getReceiveProvince().concat(exVo.getReceiveCity()).concat(exVo.getReceiveDistrict()));
+                expressTraceRecord.setHistoryAddr(expressTraceRecord.getHistoryAddr().concat(expressTraceRecord.getToAddr()));
+                expressTraceRecord.setUpdateTime(new Date());
+                expressTraceRecord.setExpressStatus(0);
+                expressService.updateById(expressTraceRecord);
+
+
+            }
+        }
+    }
+
+
+    @Scheduled(cron = "0 */15 * * * ?")
+    /**
+     *已到达的快递改为待取货
+     */
+    public void changeExpress2Wait2Get() {
+        changeExpressInfoStatus(3, 4);
     }
 
 
@@ -186,9 +231,17 @@ public class ScheduleTask implements InitializingBean {
      */
     @Scheduled(cron = "0 */20 * * * ?")
     public void changeReady4Get2Signed() {
-
+        changeExpressInfoStatus(4, 5);
     }
 
+    private int changeExpressInfoStatus(int origin, int target) {
+        ExpressInfoExample expressInfoExample = new ExpressInfoExample();
+        expressInfoExample.createCriteria().andStatusEqualTo(origin);
+
+        ExpressInfo expressInfo = new ExpressInfo();
+        expressInfo.setStatus(target);
+        return expressInfoMapper.updateByExampleSelective(expressInfo, expressInfoExample);
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {

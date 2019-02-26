@@ -16,6 +16,8 @@ public interface ExpressService {
 
     List<ExpressInfoVo> searchExpressInfoVosByStatus(int status);
 
+    ExpressInfoVo searchExpressInfoVosById(int id);
+
     int updateExpressInfoStatus(int status, List<ExpressInfoVo> list);
 
     int insertExpressTraceRecord(List<ExpressTraceRecord> records);
@@ -24,5 +26,11 @@ public interface ExpressService {
 
     ExpressTraceRecord selectMaxTraceRecord(int expressId);
 
-   int updateById(ExpressTraceRecord record);
+    int updateExpressInfoSelectiveById(ExpressInfo expressInfo);
+
+    ExpressInfo selectExpressInfoById(int id);
+
+    int updateById(ExpressTraceRecord record);
+
+
 }
