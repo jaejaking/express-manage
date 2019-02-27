@@ -98,6 +98,7 @@
     <result property="recordCount" javaType="java.lang.Integer" jdbcType="INTEGER" column="record_count"/>
   </resultMap>
 
+
   <select id="selectEveryExpressRecordCount" resultMap="ExpressRecordCountMap">
     select express_id,count(1) as record_count
     FROM t_express_trace_record

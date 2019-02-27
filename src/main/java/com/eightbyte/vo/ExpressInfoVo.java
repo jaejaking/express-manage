@@ -34,5 +34,9 @@ public class ExpressInfoVo implements Serializable {
 
     private String receiveDistrict;
 
+    private String sendMobile;
+
+    private String receiveMobile;
+
 
 }

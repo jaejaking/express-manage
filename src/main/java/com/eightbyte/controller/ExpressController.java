@@ -1,11 +1,12 @@
 package com.eightbyte.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.eightbyte.domain.ExpressInfoExample;
+import com.eightbyte.domain.ExpressTraceRecord;
+import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.util.RegexUtil;
-import com.eightbyte.vo.CommonResult;
-import com.eightbyte.vo.ExpressSendVo;
-import com.eightbyte.vo.ResultVo;
+import com.eightbyte.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/express")
 public class ExpressController extends BaseController {
 
     @Autowired
     private ExpressService expressService;
+
+    @Autowired
+    private ExpressInfoMapper expressInfoMapper;
 
 
     private CommonResult checkExpressSendInfo(ExpressSendVo expressSendVo) {
@@ -70,6 +77,41 @@ public class ExpressController extends BaseController {
         return success("保存快递信息成功!");
     }
 
+    @GetMapping("/searchExpressTraceRecord")
+    public ResultVo searchExpressTraceRecord(String queryStr) {
+        if (StringUtils.isBlank(queryStr)) {
+            return error("参数错误！");
+        }
+        ParamBean paramBean = new ParamBean();
+        List<ExpressRecordView> viewList = null;
+        if (RegexUtil.isMobile(queryStr)) {
+            paramBean.setMobile(queryStr);
+            viewList = getExpressRecordView(paramBean);
+
+        } else {
+            paramBean.setOrderNo(queryStr);
+            viewList = getExpressRecordView(paramBean);
+        }
+
+        return success("查询成功!", viewList);
+
+    }
+
+
+    private List<ExpressRecordView> getExpressRecordView(ParamBean paramBean) {
+        List<ExpressInfoVo> expressInfoVos = expressInfoMapper.selectExpressInfoVosByParamBean(paramBean);
+        List<ExpressRecordView> viewList = new ArrayList<>(8);
+        for (ExpressInfoVo expressInfoVo : expressInfoVos) {
+            ExpressRecordView recordView = new ExpressRecordView();
+            recordView.setExpressId(expressInfoVo.getExpressId());
+            recordView.setOrderNo(expressInfoVo.getExpressOrderNo());
+            recordView.setStatus(expressInfoVo.getStatus());
+            List<ExpressTraceRecord> list = expressService.searchTraceRecordByExpressId(recordView.getExpressId());
+            recordView.setRecords(list);
+            viewList.add(recordView);
+        }
+        return viewList;
+    }
 
 
 }

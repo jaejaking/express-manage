@@ -5,12 +5,14 @@ import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
 import com.eightbyte.vo.TraceRecordCountVo;
+import com.eightbyte.vo.TraceRecordVo;
 
 import java.util.List;
 
 public interface ExpressService {
 
     int saveExpressSendInfo(ExpressSendVo expressSendVo);
+
 
     List<ExpressInfo> searchUndeliverExpressInfos();
 
@@ -32,5 +34,5 @@ public interface ExpressService {
 
     int updateById(ExpressTraceRecord record);
 
-
+    List<ExpressTraceRecord> searchTraceRecordByExpressId(int expressId);
 }

@@ -9,6 +9,7 @@ import com.eightbyte.util.ExpressOrderGeneratorUtil;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
 import com.eightbyte.vo.TraceRecordCountVo;
+import com.eightbyte.vo.TraceRecordVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,6 +144,14 @@ public class ExpressServiceImpl implements ExpressService {
     @Override
     public int updateById(ExpressTraceRecord record) {
         return traceRecordMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public List<ExpressTraceRecord> searchTraceRecordByExpressId(int expressId) {
+        ExpressTraceRecordExample expressTraceRecordExample = new ExpressTraceRecordExample();
+        expressTraceRecordExample.createCriteria().andExpressIdEqualTo(expressId);
+        expressTraceRecordExample.setOrderByClause("create_time desc");
+        return traceRecordMapper.selectByExample(expressTraceRecordExample);
     }
 
 

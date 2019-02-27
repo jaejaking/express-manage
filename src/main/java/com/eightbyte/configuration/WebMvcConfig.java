@@ -30,6 +30,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(loginInterceptor).addPathPatterns("/**").excludePathPatterns("/*/login")
                 .excludePathPatterns("/*/register").excludePathPatterns("/*/verifyUserLogin")
                 .excludePathPatterns("/*/getPasswordQuestionInfos").excludePathPatterns("/*/findPassword")
-                .excludePathPatterns("/*/test");
+                .excludePathPatterns("/*/searchExpressTraceRecord");
     }
 }

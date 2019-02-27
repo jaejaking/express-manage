@@ -28,6 +28,8 @@
         <result property="receiveProvince" column="receive_province" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="receiveCity" column="receive_city" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="receiveDistrict" column="receive_district" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="receiveMobile" column="receive_mobile" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="sendMobile" column="send_mobile" javaType="java.lang.String" jdbcType="VARCHAR"/>
         <result property="status" column="status" javaType="java.lang.Integer" jdbcType="INTEGER"/>
     </resultMap>
     <select id="searchExpressInfoVosByStatus" parameterType="int" resultMap="ExpressInfoVoMap">
@@ -67,6 +69,33 @@
         where te.send_people_id = tcs.id
           and te.receive_people_id = tcr.id
           and te.id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectExpressInfoVosByParamBean" parameterType="com.eightbyte.vo.ParamBean"
+            resultMap="ExpressInfoVoMap">
+        SELECT
+        te.id,
+        te.order_no,
+        te.status,
+        tcs.province send_province,
+        tcs.city send_city,
+        tcs.district send_district,
+        tcs.phone send_mobile,
+        tcr.province receive_province,
+        tcr.city receive_city,
+        tcr.district receive_district,
+        tcr.phone receive_mobile
+        from t_client_info tcs,
+        t_express_info te,
+        t_client_info tcr
+        where te.send_people_id = tcs.id
+        and te.receive_people_id = tcr.id
+        <if test="mobile!=null">
+            and tcs.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="orderNo!=null">
+            and te.order_no = #{orderNo,jdbcType=VARCHAR}
+        </if>
     </select>
     <sql id="Example_Where_Clause">
         <!--

@@ -6,6 +6,7 @@ import com.eightbyte.domain.ExpressInfoExample;
 import java.util.List;
 
 import com.eightbyte.vo.ExpressInfoVo;
+import com.eightbyte.vo.ParamBean;
 import org.apache.ibatis.annotations.Param;
 
 public interface ExpressInfoMapper {
@@ -101,4 +102,6 @@ public interface ExpressInfoMapper {
     List<ExpressInfoVo> searchExpressInfoVosByStatus(int status);
 
     ExpressInfoVo searchExpressInfoVoById(int id);
+
+    List<ExpressInfoVo> selectExpressInfoVosByParamBean(ParamBean param);
 }
