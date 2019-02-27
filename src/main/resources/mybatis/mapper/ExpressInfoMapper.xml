@@ -91,7 +91,7 @@
         where te.send_people_id = tcs.id
         and te.receive_people_id = tcr.id
         <if test="mobile!=null">
-            and tcs.mobile = #{mobile,jdbcType=VARCHAR}
+            and tcs.phone = #{mobile,jdbcType=VARCHAR}
         </if>
         <if test="orderNo!=null">
             and te.order_no = #{orderNo,jdbcType=VARCHAR}
