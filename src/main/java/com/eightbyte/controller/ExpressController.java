@@ -150,6 +150,19 @@ public class ExpressController extends BaseController {
         return success("指派成功!");
     }
 
+    @GetMapping("/admin/assign")
+    public ResultVo adminAssignExpressTask(Integer expressId, Integer userId) {
+        //TODO 对此操作进行鉴权 为管理员权限操作
+
+        if (expressId == null || userId == null) {
+            return error("参数为有误");
+        }
+
+        int rst = expressService.assignExpress(userId, expressId, 3);
+        logger.info("admin assgin:{}", rst);
+        return success("admin指派成功!");
+    }
+
     /**
      * 查找我需要派送的所有快递信息
      *
@@ -167,7 +180,6 @@ public class ExpressController extends BaseController {
         logger.info("需派送的所有快递信息:{}", JSON.toJSONString(expressInfoVos));
         return success(expressInfoVos);
     }
-
 
 
 }

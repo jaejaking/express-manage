@@ -41,6 +41,7 @@ public interface ExpressService {
 
     int assignExpress(String userName, int  expressId);
 
+    int assignExpress(int  userId,int expressId,int source);
     List<ExpressInfoVo> searchExpressTaskByUserName(String userName);
 
 

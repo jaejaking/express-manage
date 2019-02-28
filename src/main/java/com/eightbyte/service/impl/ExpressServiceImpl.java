@@ -176,12 +176,18 @@ public class ExpressServiceImpl implements ExpressService {
             throw new RuntimeException("不存在此用户!");
         }
 
+
+        return assignExpress(user.getId(), expressId, 1);
+    }
+
+    @Override
+    public int assignExpress(int userId, int expressId, int source) {
         ExpressCarrierRelation carrierRelation = ExpressCarrierRelation.builder()
                 .expressId(expressId)
                 .createTime(new Date())
                 .updateTime(new Date())
-                .userId(user.getId())
-                .source(1)
+                .userId(userId)
+                .source(source)
                 .build();
 
         int insert = carrierRelationMapper.insert(carrierRelation);
@@ -191,8 +197,7 @@ public class ExpressServiceImpl implements ExpressService {
         expressInfo.setIsBusy(1);
         int update = expressInfoMapper.updateByPrimaryKeySelective(expressInfo);
         log.info("update express:{}", update);
-
-        return insert + update;
+        return 0;
     }
 
     @Override

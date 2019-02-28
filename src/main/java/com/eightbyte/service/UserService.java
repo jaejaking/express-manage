@@ -3,6 +3,8 @@ package com.eightbyte.service;
 import com.eightbyte.domain.User;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public interface UserService {
 
     int insertUser(User user);
@@ -16,5 +18,8 @@ public interface UserService {
     int updateUserPassword(String userName, String password);
 
     int updateUserPassword(String userName, String oldPassword, String newPassword);
+
+
+    List<User> searchAllCarrier();
 
 }

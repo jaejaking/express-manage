@@ -10,6 +10,7 @@ import com.eightbyte.service.UserService;
 import com.eightbyte.util.Md5Util;
 import com.eightbyte.vo.ResultVo;
 import io.swagger.annotations.*;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -218,6 +219,14 @@ public class UserController extends BaseController {
         return success("用户已登录！");
     }
 
+    @GetMapping("/getAllCarrier")
+    public ResultVo searchAllNotAdminUser() {
+        List<User> users = userService.searchAllCarrier();
+        logger.info("all carrier:{}", JSON.toJSONString(users));
+        return success(users);
+
+
+    }
 
 
 }

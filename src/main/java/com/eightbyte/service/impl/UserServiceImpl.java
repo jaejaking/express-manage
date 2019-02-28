@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
                 .registerKeyId(keyId)
                 .questionId(questionId)
                 .questionAnswer(answer)
-                .roleId(3)
+                .roleId(5)
                 .createTime(new Date())
                 .updateTime(new Date())
                 .build();
@@ -99,5 +99,12 @@ public class UserServiceImpl implements UserService {
         userExample.createCriteria().andUsernameEqualTo(userName)
                 .andPasswordEqualTo(Md5Util.getMD5(oldPassword));
         return userMapper.updateByExampleSelective(user, userExample);
+    }
+
+    @Override
+    public List<User> searchAllCarrier() {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andRoleIdEqualTo(5);
+        return userMapper.selectByExample(userExample);
     }
 }
