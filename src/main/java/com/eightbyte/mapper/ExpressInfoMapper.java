@@ -98,10 +98,13 @@ public interface ExpressInfoMapper {
      */
     int updateByPrimaryKey(ExpressInfo record);
 
-
     List<ExpressInfoVo> searchExpressInfoVosByStatus(int status);
 
     ExpressInfoVo searchExpressInfoVoById(int id);
 
     List<ExpressInfoVo> selectExpressInfoVosByParamBean(ParamBean param);
+
+    List<ExpressInfoVo> selectNoBusyExpressAnd4PickUp();
+
+    List<ExpressInfoVo> selectAllMyExpressTask(Integer userId);
 }

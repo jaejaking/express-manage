@@ -60,7 +60,7 @@
 
 
         <!--数据库对应数据表-->
-        <table tableName="t_express_trace_record" domainObjectName="ExpressTraceRecord" enableDeleteByExample="true"
+        <table tableName="t_express_carrier_relation" domainObjectName="ExpressCarrierRelation" enableDeleteByExample="true"
                enableCountByExample="true" enableSelectByExample="true" enableUpdateByExample="true"
                enableSelectByPrimaryKey="true"
                enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true">

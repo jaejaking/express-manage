@@ -1,15 +1,13 @@
 package com.eightbyte.service.impl;
 
 import com.eightbyte.domain.*;
-import com.eightbyte.mapper.ClientInfoMapper;
-import com.eightbyte.mapper.ExpressInfoMapper;
-import com.eightbyte.mapper.ExpressTraceRecordMapper;
+import com.eightbyte.mapper.*;
 import com.eightbyte.service.ExpressService;
+import com.eightbyte.service.UserService;
 import com.eightbyte.util.ExpressOrderGeneratorUtil;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.ExpressSendVo;
 import com.eightbyte.vo.TraceRecordCountVo;
-import com.eightbyte.vo.TraceRecordVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +30,16 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Autowired
     private ExpressTraceRecordMapper traceRecordMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ExpressCarrierRelationMapper carrierRelationMapper;
+
 
     @Override
     @Transactional(transactionManager = "transactionManager", rollbackFor = Exception.class, propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
@@ -70,6 +78,7 @@ public class ExpressServiceImpl implements ExpressService {
                 .sendPeopleId(sendID)
                 .receivePeopleId(receiveID)
                 .orderNo(ExpressOrderGeneratorUtil.generateOrderNo())
+                .isBusy(0)
                 .createTime(new Date())
                 .updateTime(new Date())
                 .status(1)
@@ -152,6 +161,48 @@ public class ExpressServiceImpl implements ExpressService {
         expressTraceRecordExample.createCriteria().andExpressIdEqualTo(expressId);
         expressTraceRecordExample.setOrderByClause("create_time desc");
         return traceRecordMapper.selectByExample(expressTraceRecordExample);
+    }
+
+    @Override
+    public List<ExpressInfoVo> selectNoBusyExpressAnd4PickUp() {
+        return expressInfoMapper.selectNoBusyExpressAnd4PickUp();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, transactionManager = "transactionManager", rollbackFor = Exception.class)
+    public int assignExpress(String userName, int expressId) {
+        User user = userService.selectUserByUserName(userName);
+        if (user == null) {
+            throw new RuntimeException("不存在此用户!");
+        }
+
+        ExpressCarrierRelation carrierRelation = ExpressCarrierRelation.builder()
+                .expressId(expressId)
+                .createTime(new Date())
+                .updateTime(new Date())
+                .userId(user.getId())
+                .source(1)
+                .build();
+
+        int insert = carrierRelationMapper.insert(carrierRelation);
+        log.info("relation insert:{}", insert);
+
+        ExpressInfo expressInfo = expressInfoMapper.selectByPrimaryKey(expressId);
+        expressInfo.setIsBusy(1);
+        int update = expressInfoMapper.updateByPrimaryKeySelective(expressInfo);
+        log.info("update express:{}", update);
+
+        return insert + update;
+    }
+
+    @Override
+    public List<ExpressInfoVo> searchExpressTaskByUserName(String userName) {
+        User user = userService.selectUserByUserName(userName);
+        if (user == null) {
+            throw new RuntimeException("user 不存在!");
+        }
+
+        return expressInfoMapper.selectAllMyExpressTask(user.getId());
     }
 
 

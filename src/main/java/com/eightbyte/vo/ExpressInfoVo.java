@@ -18,6 +18,7 @@ public class ExpressInfoVo implements Serializable {
 
     private String expressOrderNo;
 
+    private Integer isBusy;
 
     private Integer status;
 
@@ -37,6 +38,13 @@ public class ExpressInfoVo implements Serializable {
     private String sendMobile;
 
     private String receiveMobile;
+
+    /**
+     * 详细地址
+     */
+    private String detailedAddr;
+
+    private Integer source;
 
 
 }

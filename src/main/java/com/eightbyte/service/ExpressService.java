@@ -35,4 +35,13 @@ public interface ExpressService {
     int updateById(ExpressTraceRecord record);
 
     List<ExpressTraceRecord> searchTraceRecordByExpressId(int expressId);
+
+    List<ExpressInfoVo> selectNoBusyExpressAnd4PickUp();
+
+
+    int assignExpress(String userName, int  expressId);
+
+    List<ExpressInfoVo> searchExpressTaskByUserName(String userName);
+
+
 }

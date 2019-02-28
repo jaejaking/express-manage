@@ -4,14 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.eightbyte.domain.ExpressInfo;
 import com.eightbyte.domain.ExpressInfoExample;
 import com.eightbyte.domain.ExpressTraceRecord;
-import com.eightbyte.domain.ExpressTraceRecordExample;
 import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.mapper.ExpressTraceRecordMapper;
 import com.eightbyte.service.ExpressService;
 import com.eightbyte.vo.ExpressInfoVo;
 import com.eightbyte.vo.TraceRecordCountVo;
-import com.eightbyte.vo.TraceRecordVo;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +20,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author yanghaoran@ehomepay.com.cn
@@ -36,6 +34,17 @@ public class ScheduleTask implements InitializingBean {
     private List<Map<String, String>> addrList = new ArrayList<>(64);
 
     private Random random = new Random();
+    /**
+     * 1：飞机 2：火车 3：厢货 4：轮船
+     */
+    private static List<Integer> transferTypeList = new CopyOnWriteArrayList<>();
+
+    static {
+        transferTypeList.add(1);
+        transferTypeList.add(2);
+        transferTypeList.add(3);
+        transferTypeList.add(4);
+    }
 
     @Autowired
     private ExpressService expressService;
@@ -57,6 +66,7 @@ public class ScheduleTask implements InitializingBean {
         String deafultProvinceStr = "山东蓬莱岛";
         String sendProvinceCityStr = expressInfoVo.getSendProvince().concat(expressInfoVo.getSendCity());
         String receiveProvinceCityStr = expressInfoVo.getReceiveProvince().concat(expressInfoVo.getReceiveCity());
+
 
         for (; ; ) {
             Map<String, String> map = addrList.get(random.nextInt(addrList.size()));
@@ -128,6 +138,7 @@ public class ScheduleTask implements InitializingBean {
             }
             expressTraceRecord.setIsTo(0);
             expressTraceRecord.setExpressStatus(0);
+            expressTraceRecord.setTransferType(transferTypeList.get(random.nextInt(transferTypeList.size())));
             expressTraceRecord.setCreateTime(new Date());
             expressTraceRecord.setUpdateTime(new Date());
             list.add(expressTraceRecord);
@@ -173,6 +184,7 @@ public class ScheduleTask implements InitializingBean {
             record.setExpressOrderNo(expressTraceRecord.getExpressOrderNo());
             record.setUpdateTime(new Date());
             record.setCreateTime(new Date());
+            record.setTransferType(transferTypeList.get(random.nextInt(transferTypeList.size())));
             record.setToAddr(expressTraceRecord.getToAddr());
 
             list.add(record);
@@ -208,7 +220,8 @@ public class ScheduleTask implements InitializingBean {
                 expressTraceRecord.setToAddr(exVo.getReceiveProvince().concat(exVo.getReceiveCity()).concat(exVo.getReceiveDistrict()));
                 expressTraceRecord.setHistoryAddr(expressTraceRecord.getHistoryAddr().concat(expressTraceRecord.getToAddr()));
                 expressTraceRecord.setUpdateTime(new Date());
-                expressTraceRecord.setExpressStatus(0);
+                expressTraceRecord.setExpressStatus(1);
+                expressTraceRecord.setTransferType(transferTypeList.get(random.nextInt(transferTypeList.size())));
                 expressService.updateById(expressTraceRecord);
 
 
@@ -229,7 +242,6 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟将待取货变为已签收 每20分钟执行一次
      */
-    @Scheduled(cron = "0 */20 * * * ?")
     public void changeReady4Get2Signed() {
         changeExpressInfoStatus(4, 5);
     }

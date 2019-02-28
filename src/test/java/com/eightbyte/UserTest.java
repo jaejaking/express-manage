@@ -29,7 +29,7 @@ public class UserTest {
 
     @Test
     public void testInsertTraceRecord() {
-        ExpressTraceRecord record=new ExpressTraceRecord();
+        ExpressTraceRecord record = new ExpressTraceRecord();
         record.setCreateTime(new Date());
         record.setUpdateTime(new Date());
         record.setExpressOrderNo("1111111111111");

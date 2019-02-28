@@ -525,6 +525,66 @@ public class ExpressTraceRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andTransferTypeIsNull() {
+            addCriterion("transfer_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeIsNotNull() {
+            addCriterion("transfer_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeEqualTo(Integer value) {
+            addCriterion("transfer_type =", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeNotEqualTo(Integer value) {
+            addCriterion("transfer_type <>", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeGreaterThan(Integer value) {
+            addCriterion("transfer_type >", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("transfer_type >=", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeLessThan(Integer value) {
+            addCriterion("transfer_type <", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("transfer_type <=", value, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeIn(List<Integer> values) {
+            addCriterion("transfer_type in", values, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeNotIn(List<Integer> values) {
+            addCriterion("transfer_type not in", values, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeBetween(Integer value1, Integer value2) {
+            addCriterion("transfer_type between", value1, value2, "transferType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransferTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("transfer_type not between", value1, value2, "transferType");
+            return (Criteria) this;
+        }
+
         public Criteria andHistoryAddrIsNull() {
             addCriterion("history_addr is null");
             return (Criteria) this;

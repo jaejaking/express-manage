@@ -2,6 +2,7 @@ package com.eightbyte.mapper;
 
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.domain.ExpressTraceRecordExample;
+
 import java.util.List;
 
 import com.eightbyte.vo.TraceRecordCountVo;
@@ -96,13 +97,7 @@ public interface ExpressTraceRecordMapper {
      */
     int updateByPrimaryKey(ExpressTraceRecord record);
 
-    /**
-     * @return
-     */
     List<TraceRecordCountVo> selectEveryExpressRecordCount();
 
-
     ExpressTraceRecord selectMaxTraceRecord(int expressId);
-
-
 }
