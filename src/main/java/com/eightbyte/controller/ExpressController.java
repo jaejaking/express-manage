@@ -116,11 +116,22 @@ public class ExpressController extends BaseController {
     }
 
 
+    @GetMapping("/getExpressDetails")
+    public ResultVo getExpressDetails(Integer expressId) {
+        if (expressId == null) {
+            return error("参数错误!");
+        }
+        ExpressInfoVo expressInfoVo = expressService.searchExpressInfoVosById(expressId);
+        logger.info("expressInfoVo:{}", JSON.toJSONString(expressInfoVo));
+        return success(expressInfoVo);
+    }
+
     /**
      * 展示待取货的快递
      *
      * @return
      */
+    @GetMapping("/getAllReady4PickUpExpressInfos")
     public ResultVo findExpress4PickUp() {
         List<ExpressInfoVo> expressInfoVos = expressService.selectNoBusyExpressAnd4PickUp();
         logger.info("待取货的快递:{}", JSON.toJSONString(expressInfoVos));

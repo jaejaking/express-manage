@@ -155,7 +155,7 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟快递运输中转,每十分钟执行1次
      */
-    @Scheduled(cron = "0 */2 * * * ?")
+    @Scheduled(cron = "0 */1 * * * ?")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeTransferStatus() {
         log.info("模拟快递中转开始！");
@@ -163,6 +163,7 @@ public class ScheduleTask implements InitializingBean {
         List<TraceRecordCountVo> traceRecordCountVos = expressService.selectEveryExpressRecordCount();
         for (TraceRecordCountVo recordCountVo : traceRecordCountVos) {
             if (recordCountVo.getRecordCount() > recordCount - 1) {
+                log.info("当前快递id:{}记录数模拟达到上限，不再自动生成!", recordCountVo.getExpressId());
                 continue;
             }
             //设置当前中转到站
@@ -200,18 +201,20 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟将已到达目的地快递状态变为已到达,每15分钟执行一次
      */
-    @Scheduled(cron = "0 */15 * * * ?")
+    @Scheduled(cron = "0 */7 * * * ?")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeArrived2Ready4Get() {
         log.info("改变快递状态为已到达开始！");
         List<TraceRecordCountVo> traceRecordCountVos = expressService.selectEveryExpressRecordCount();
         for (TraceRecordCountVo recordCountVo : traceRecordCountVos) {
             if (recordCountVo.getRecordCount() >= recordCount) {
-                ExpressInfo expressInfo = new ExpressInfo();
-                expressInfo.setId(recordCountVo.getExpressId());
-                expressInfo.setStatus(3);
-                expressInfo.setUpdateTime(new Date());
-                expressService.updateExpressInfoSelectiveById(expressInfo);
+                ExpressInfo ex = expressService.selectExpressInfoById(recordCountVo.getExpressId());
+                if (ex.getStatus() != 2) {
+                    continue;
+                }
+                ex.setStatus(3);
+                ex.setUpdateTime(new Date());
+                expressService.updateExpressInfoSelectiveById(ex);
 
                 ExpressInfoVo exVo = expressService.searchExpressInfoVosById(recordCountVo.getExpressId());
 
@@ -230,11 +233,13 @@ public class ScheduleTask implements InitializingBean {
     }
 
 
-    @Scheduled(cron = "0 */15 * * * ?")
+    @Scheduled(cron = "0 */10 * * * ?")
     /**
      *已到达的快递改为待取货
      */
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeExpress2Wait2Get() {
+        log.info("改变快递状态为待取货开始！");
         changeExpressInfoStatus(3, 4);
     }
 
@@ -242,6 +247,7 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟将待取货变为已签收 每20分钟执行一次
      */
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeReady4Get2Signed() {
         changeExpressInfoStatus(4, 5);
     }

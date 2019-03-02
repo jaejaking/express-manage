@@ -1,6 +1,7 @@
 package com.eightbyte.service;
 
 import com.eightbyte.domain.User;
+import com.eightbyte.vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -21,5 +22,10 @@ public interface UserService {
 
 
     List<User> searchAllCarrier();
+
+
+    UserVo getUserTasksByUserId(Integer userId);
+
+    UserVo selectUserVoRoleByUserName(String userName);
 
 }

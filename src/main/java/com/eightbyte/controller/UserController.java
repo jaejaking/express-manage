@@ -9,6 +9,7 @@ import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.service.UserService;
 import com.eightbyte.util.Md5Util;
 import com.eightbyte.vo.ResultVo;
+import com.eightbyte.vo.UserVo;
 import io.swagger.annotations.*;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +73,24 @@ public class UserController extends BaseController {
             return false;
         }
         return true;
+    }
+
+
+    private List<UserVo> buildUserVos(List<User> users) {
+        List<UserVo> userVos = new ArrayList<>(8);
+        if (users == null || users.isEmpty()) {
+            return null;
+        }
+        for (User user : users) {
+            UserVo userVo = UserVo.builder()
+                    .id(user.getId())
+                    .userName(user.getUsername())
+                    .tasks(userService.getUserTasksByUserId(user.getId()).getTasks())
+                    .build();
+            userVos.add(userVo);
+
+        }
+        return userVos;
     }
 
     @PostMapping("/login")
@@ -219,13 +239,26 @@ public class UserController extends BaseController {
         return success("用户已登录！");
     }
 
-    @GetMapping("/getAllCarrier")
+    @GetMapping("/getAllCarrierAndTheirTasks")
     public ResultVo searchAllNotAdminUser() {
         List<User> users = userService.searchAllCarrier();
         logger.info("all carrier:{}", JSON.toJSONString(users));
-        return success(users);
+        return success(buildUserVos(users));
 
 
+    }
+
+    @GetMapping("/getCurrentUserRole")
+    public ResultVo getCurrentLoginUserRole() {
+        HttpSession session = request.getSession(true);
+        Object attribute = session.getAttribute(Constant.LOGIN_SUCCESS_TOKEN);
+        if (attribute == null || !(attribute instanceof String)) {
+            throw new RuntimeException("登录出现问题!");
+        }
+        String userName = (String) attribute;
+        UserVo userVo = userService.selectUserVoRoleByUserName(userName);
+        logger.info("userRoleVo:{}", JSON.toJSONString(userVo));
+        return success(userVo);
     }
 
 

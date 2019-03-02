@@ -2,12 +2,13 @@ package com.eightbyte.mapper;
 
 import com.eightbyte.domain.User;
 import com.eightbyte.domain.UserExample;
+
 import java.util.List;
+
+import com.eightbyte.vo.UserVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
-
-
 
 
     /**
@@ -97,4 +98,10 @@ public interface UserMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(User record);
+
+
+    UserVo getUserTasksByUserId(Integer userId);
+
+    UserVo selectUserVoRoleByUserName(String userName);
+
 }

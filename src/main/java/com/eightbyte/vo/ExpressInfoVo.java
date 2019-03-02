@@ -42,7 +42,10 @@ public class ExpressInfoVo implements Serializable {
     /**
      * 详细地址
      */
-    private String detailedAddr;
+    private String receiveDetailedAddr;
+
+
+    private String sendDetailedAddr;
 
     private Integer source;
 

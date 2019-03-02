@@ -8,6 +8,7 @@ import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.mapper.UserMapper;
 import com.eightbyte.service.UserService;
 import com.eightbyte.util.Md5Util;
+import com.eightbyte.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,5 +107,17 @@ public class UserServiceImpl implements UserService {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andRoleIdEqualTo(5);
         return userMapper.selectByExample(userExample);
+    }
+
+    @Override
+    public UserVo getUserTasksByUserId(Integer userId) {
+
+        return userMapper.getUserTasksByUserId(userId);
+    }
+
+    @Override
+    public UserVo selectUserVoRoleByUserName(String userName) {
+
+        return userMapper.selectUserVoRoleByUserName(userName);
     }
 }
