@@ -51,12 +51,43 @@ public class EvaluatePriceController extends BaseController {
         CaculatePriceView priceView = CaculatePriceView.builder()
                 .price(price)
                 .distance(distance)
+                .days(calculateDays(distance, transferType))
                 .transferType(transferType).build();
 
         logger.info("价格估算:{}", JSON.toJSONString(priceView));
 
         return success(priceView);
     }
+
+    /**
+     * 计算快递预估天数
+     *
+     * @param distance
+     * @param transferType
+     * @return
+     */
+    private Integer calculateDays(BigDecimal distance, Integer transferType) {
+        if (distance == null || distance.doubleValue() <= 0) {
+            return 0;
+        }
+        if (distance.doubleValue() <= 50) {
+            return 1;
+        }
+        if (distance.doubleValue() <= 200) {
+            return 2;
+        }
+        if (distance.doubleValue() <= 1000 && transferType != 1) {
+            return 3;
+        }
+        if (distance.doubleValue() <= 1000 && transferType == 1) {
+            return 1;
+        }
+        if (distance.doubleValue() <= 2000 && transferType == 1) {
+            return 2;
+        }
+        return 4;
+    }
+
 
     /**
      * 计算重量的价格

@@ -20,6 +20,11 @@ public class CaculatePriceView implements Serializable {
      * 预估价格
      */
     private BigDecimal price;
+
+    /**
+     * 预计天数
+     */
+    private Integer days;
     /**
      * 运输方式
      */

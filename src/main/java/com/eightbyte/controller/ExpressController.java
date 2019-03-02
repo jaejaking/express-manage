@@ -5,6 +5,7 @@ import com.eightbyte.constant.Constant;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.service.ExpressService;
+import com.eightbyte.service.UserService;
 import com.eightbyte.util.RegexUtil;
 import com.eightbyte.vo.*;
 import jdk.nashorn.internal.objects.annotations.Getter;
@@ -25,6 +26,9 @@ public class ExpressController extends BaseController {
 
     @Autowired
     private ExpressService expressService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ExpressInfoMapper expressInfoMapper;
@@ -164,9 +168,19 @@ public class ExpressController extends BaseController {
     @GetMapping("/admin/assign")
     public ResultVo adminAssignExpressTask(Integer expressId, Integer userId) {
         //TODO 对此操作进行鉴权 为管理员权限操作
-
         if (expressId == null || userId == null) {
             return error("参数为有误");
+        }
+        HttpSession session = request.getSession(true);
+        Object attribute = session.getAttribute(Constant.LOGIN_SUCCESS_TOKEN);
+        if (attribute == null || !(attribute instanceof String)) {
+            return error("session存储错误!!");
+        }
+        String userName = (String) attribute;
+        UserVo userVo = userService.selectUserVoRoleByUserName(userName);
+        logger.info("userVo:{}", JSON.toJSONString(userVo));
+        if (!"000".equalsIgnoreCase(userVo.getRoleCode())) {
+            return error("权限不足!");
         }
 
         int rst = expressService.assignExpress(userId, expressId, 3);
@@ -191,6 +205,8 @@ public class ExpressController extends BaseController {
         logger.info("需派送的所有快递信息:{}", JSON.toJSONString(expressInfoVos));
         return success(expressInfoVos);
     }
+
+
 
 
 }

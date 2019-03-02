@@ -82,10 +82,16 @@ public class UserController extends BaseController {
             return null;
         }
         for (User user : users) {
+            logger.info(JSON.toJSONString(user));
+            Integer tasks = null;
+            UserVo uVo = userService.getUserTasksByUserId(user.getId());
+            if (uVo != null) {
+             tasks=uVo.getTasks();
+            }
             UserVo userVo = UserVo.builder()
                     .id(user.getId())
                     .userName(user.getUsername())
-                    .tasks(userService.getUserTasksByUserId(user.getId()).getTasks())
+                    .tasks(tasks == null ? 0 : tasks)
                     .build();
             userVos.add(userVo);
 
@@ -128,7 +134,7 @@ public class UserController extends BaseController {
 
     @PostMapping("/register")
     public ResultVo register(String userName, String password, Integer questionId, String answer, String key) {
-        logger.info("register请求参数userName:{},passowrd:{},key:{}", userName, password, key);
+        logger.info("register请求参数userName:{},password:{},key:{}", userName, password, key);
         if (!checkUserName(userName)) {
             return error("用户名不合法!");
         }
@@ -150,7 +156,7 @@ public class UserController extends BaseController {
         if (user != null) {
             return error("用户名已存在!");
         }
-        int rst = userService.insertUser(userName, password, questionId, answer, registerKeys.get(0).getId());
+        int rst = userService.insertUser(userName, Md5Util.getMD5(password), questionId, answer, registerKeys.get(0).getId());
         if (rst > 0) {
             return success("注册成功!");
         }
