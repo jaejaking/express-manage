@@ -113,7 +113,7 @@
     <include refid="Base_Column_List" />
     from t_express_trace_record
     where express_id = #{expressId,jdbcType=INTEGER}
-    and create_time = (select max(create_time) from t_express_trace_record where express_id =
+    and id = (select max(id) from t_express_trace_record where express_id =
     #{expressId,jdbcType=INTEGER})
 
   </select>

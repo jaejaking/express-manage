@@ -2,6 +2,7 @@ package com.eightbyte.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.eightbyte.constant.Constant;
+import com.eightbyte.domain.ExpressInfo;
 import com.eightbyte.domain.ExpressTraceRecord;
 import com.eightbyte.mapper.ExpressInfoMapper;
 import com.eightbyte.service.ExpressService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -206,7 +208,19 @@ public class ExpressController extends BaseController {
         return success(expressInfoVos);
     }
 
-
+    @GetMapping("/me/signExpress")
+    public ResultVo signExpressInfo(Integer expressId) {
+        if (expressId == null || expressId < 0) {
+            return error("参数有误!");
+        }
+        ExpressInfo expressInfo = new ExpressInfo();
+        expressInfo.setId(expressId);
+        expressInfo.setStatus(5);
+        expressInfo.setUpdateTime(new Date());
+        int uptRst = expressService.updateExpressInfoSelectiveById(expressInfo);
+        logger.info("update Result:{}", uptRst);
+        return success("签收成功!");
+    }
 
 
 }

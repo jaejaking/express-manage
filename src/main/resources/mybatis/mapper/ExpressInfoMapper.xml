@@ -143,7 +143,7 @@
             te.order_no,
             te.status,
             te.is_busy,
-            u.source
+            tecr.source,
             tcs.province send_province,
             tcs.city     send_city,
             tcs.district send_district,
@@ -159,10 +159,9 @@
              user u
         where te.send_people_id = tcs.id
           and te.receive_people_id = tcr.id
-          and tecr.express_id
-          and te.id
+          and tecr.express_id= te.id
           and u.id = tecr.user_id
-          and u.id = #{userId,jdbcType=INTEGER}
+          and u.id = #{userId,jdbcType=INTEGER} and te.status=4
 
     </select>
     <sql id="Example_Where_Clause">

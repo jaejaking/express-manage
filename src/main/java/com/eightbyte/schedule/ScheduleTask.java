@@ -166,6 +166,7 @@ public class ScheduleTask implements InitializingBean {
                 log.info("当前快递id:{}记录数模拟达到上限，不再自动生成!", recordCountVo.getExpressId());
                 continue;
             }
+
             //设置当前中转到站
             ExpressTraceRecord expressTraceRecord = expressService.selectMaxTraceRecord(recordCountVo.getExpressId());
             expressTraceRecord.setIsTo(1);
@@ -258,7 +259,8 @@ public class ScheduleTask implements InitializingBean {
 
         ExpressInfo expressInfo = new ExpressInfo();
         expressInfo.setStatus(target);
-        return expressInfoMapper.updateByExampleSelective(expressInfo, expressInfoExample);
+        int rst = expressInfoMapper.updateByExampleSelective(expressInfo, expressInfoExample);
+        return rst;
     }
 
     @Override
