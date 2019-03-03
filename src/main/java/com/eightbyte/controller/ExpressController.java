@@ -169,7 +169,6 @@ public class ExpressController extends BaseController {
 
     @GetMapping("/admin/assign")
     public ResultVo adminAssignExpressTask(Integer expressId, Integer userId) {
-        //TODO 对此操作进行鉴权 为管理员权限操作
         if (expressId == null || userId == null) {
             return error("参数为有误");
         }

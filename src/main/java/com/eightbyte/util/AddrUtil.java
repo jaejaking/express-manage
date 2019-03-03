@@ -146,20 +146,25 @@ public class AddrUtil {
                 city = s.substring(s.indexOf(",") + 5);
             }
             place = (province + city).replace("\"", "");
+
             if (place.indexOf(BEI_JING) != -1) {
                 place = BEI_JING;
+                return place;
             }
             if (place.indexOf(SHANG_HAI) != -1) {
                 place = SHANG_HAI;
+                return place;
             }
             if (place.indexOf(TIAN_JIN) != -1) {
                 place = TIAN_JIN;
+                return place;
             }
             if (place.indexOf(CHONG_QING) != -1) {
                 place = CHONG_QING;
+                return place;
             }
 
-            return place;
+            return city.replace("\"", "");
         } catch (MalformedURLException e) {
             e.printStackTrace();
             log.error(e.getMessage(), e);

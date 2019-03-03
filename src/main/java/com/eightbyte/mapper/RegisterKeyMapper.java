@@ -93,4 +93,6 @@ public interface RegisterKeyMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(RegisterKey record);
+
+
 }

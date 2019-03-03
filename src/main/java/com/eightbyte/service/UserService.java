@@ -1,6 +1,7 @@
 package com.eightbyte.service;
 
 import com.eightbyte.domain.User;
+import com.eightbyte.vo.RegisterKeyVo;
 import com.eightbyte.vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
 
@@ -28,4 +29,8 @@ public interface UserService {
 
     UserVo selectUserVoRoleByUserName(String userName);
 
+
+    List<RegisterKeyVo> selectRegisterKeys();
+
+    int generateKeys();
 }

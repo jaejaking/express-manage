@@ -6,8 +6,11 @@ import com.eightbyte.domain.User;
 import com.eightbyte.domain.UserExample;
 import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.mapper.UserMapper;
+import com.eightbyte.service.RegisterKeyService;
 import com.eightbyte.service.UserService;
+import com.eightbyte.util.ExpressOrderGeneratorUtil;
 import com.eightbyte.util.Md5Util;
+import com.eightbyte.vo.RegisterKeyVo;
 import com.eightbyte.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RegisterKeyMapper registerKeyMapper;
+
+    @Autowired
+    private RegisterKeyService registerKeyService;
 
     @Override
     public int insertUser(User user) {
@@ -119,5 +125,28 @@ public class UserServiceImpl implements UserService {
     public UserVo selectUserVoRoleByUserName(String userName) {
 
         return userMapper.selectUserVoRoleByUserName(userName);
+    }
+
+    @Override
+    public List<RegisterKeyVo> selectRegisterKeys() {
+        return userMapper.selectRegisterKeys();
+    }
+
+    @Override
+    public int generateKeys() {
+        String keyName = "";
+        for (; ; ) {
+            keyName = ExpressOrderGeneratorUtil.generateFixLengthOrderNo(8);
+            RegisterKey registerKey = registerKeyService.selectRegisterKeyByKeyName(keyName);
+            if (registerKey == null) {
+                break;
+            }
+        }
+        RegisterKey registerKey = new RegisterKey();
+        registerKey.setStatus(0);
+        registerKey.setCreateTime(new Date());
+        registerKey.setUpdateTime(new Date());
+        registerKey.setKeyName(keyName);
+        return registerKeyMapper.insert(registerKey);
     }
 }

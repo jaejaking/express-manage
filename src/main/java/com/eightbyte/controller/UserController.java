@@ -8,6 +8,7 @@ import com.eightbyte.mapper.QuestionMapper;
 import com.eightbyte.mapper.RegisterKeyMapper;
 import com.eightbyte.service.UserService;
 import com.eightbyte.util.Md5Util;
+import com.eightbyte.vo.RegisterKeyVo;
 import com.eightbyte.vo.ResultVo;
 import com.eightbyte.vo.UserVo;
 import io.swagger.annotations.*;
@@ -86,7 +87,7 @@ public class UserController extends BaseController {
             Integer tasks = null;
             UserVo uVo = userService.getUserTasksByUserId(user.getId());
             if (uVo != null) {
-             tasks=uVo.getTasks();
+                tasks = uVo.getTasks();
             }
             UserVo userVo = UserVo.builder()
                     .id(user.getId())
@@ -251,7 +252,6 @@ public class UserController extends BaseController {
         logger.info("all carrier:{}", JSON.toJSONString(users));
         return success(buildUserVos(users));
 
-
     }
 
     @GetMapping("/getCurrentUserRole")
@@ -267,5 +267,15 @@ public class UserController extends BaseController {
         return success(userVo);
     }
 
+    @GetMapping("/getRegisterKeys")
+    public ResultVo getRegisterKeys() {
+        List<RegisterKeyVo> registerKeyVos = userService.selectRegisterKeys();
+        logger.info("registerKeyVos:{}", JSON.toJSONString(registerKeyVos));
+        return success(registerKeyVos);
+    }
 
+    @GetMapping("/generateKeys")
+    public synchronized ResultVo generateKeys() {
+        return success(userService.generateKeys());
+    }
 }

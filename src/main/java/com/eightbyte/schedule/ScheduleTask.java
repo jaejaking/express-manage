@@ -202,7 +202,7 @@ public class ScheduleTask implements InitializingBean {
     /**
      * 模拟将已到达目的地快递状态变为已到达,每15分钟执行一次
      */
-    @Scheduled(cron = "0 */7 * * * ?")
+    @Scheduled(cron = "0 */13 * * * ?")
     @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED, transactionManager = "transactionManager", rollbackFor = Exception.class)
     public void changeArrived2Ready4Get() {
         log.info("改变快递状态为已到达开始！");
@@ -234,7 +234,7 @@ public class ScheduleTask implements InitializingBean {
     }
 
 
-    @Scheduled(cron = "0 */10 * * * ?")
+    @Scheduled(cron = "0 */12 * * * ?")
     /**
      *已到达的快递改为待取货
      */

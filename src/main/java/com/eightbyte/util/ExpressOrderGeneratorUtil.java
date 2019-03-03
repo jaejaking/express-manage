@@ -32,7 +32,7 @@ public class ExpressOrderGeneratorUtil {
     }
 
     public static String generateFixLengthOrderNo(int fixLength) {
-        if (fixLength <= 14&&fixLength>50) {
+        if (fixLength <= 14 && fixLength > 50) {
             throw new RuntimeException();
         }
         StringBuilder sb = new StringBuilder();
@@ -52,6 +52,19 @@ public class ExpressOrderGeneratorUtil {
                 }
             }
 
+        }
+        return sb.toString();
+    }
+
+    public static String genareteRegisterKeys(int fixLength) {
+        if (fixLength <= 0) {
+            throw new RuntimeException("key length error!");
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < fixLength; i++) {
+            sb.append(alphabets[random.nextInt(alphabets.length)]);
         }
         return sb.toString();
     }

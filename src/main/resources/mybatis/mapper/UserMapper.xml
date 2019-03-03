@@ -103,13 +103,24 @@
         <result column="username" property="userName" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
 
+    <resultMap id="RegisterKeyVoMap" type="com.eightbyte.vo.RegisterKeyVo">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="keyName" column="key_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="unionUser" column="username" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        <result property="status" column="status" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+    </resultMap>
+
     <select id="getUserTasksByUserId" parameterType="integer" resultMap="UserVoMap">
         select
             u.id        user_id,
             count(u.id) tasks
         from user u,
-             t_express_carrier_relation r
+             t_express_carrier_relation r,
+             t_express_info te
         where u.id = r.user_id
+          and te.id = r.express_id
+          and te.status = 4
           and u.id = #{id,jdbcType=INTEGER}
         group by u.id
     </select>
@@ -130,6 +141,19 @@
           and u.username = #{userName,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectRegisterKeys" resultMap="RegisterKeyVoMap">
+        SELECT
+            u.username,
+            r.role_name,
+            t.status,
+            t.key_name,
+            t.id
+        from user u,
+             t_register_key t,
+             role r
+        where u.register_key_id = t.id
+          and u.role_id = r.id
+    </select>
 
     <select id="selectByExample" parameterType="com.eightbyte.domain.UserExample" resultMap="BaseResultMap">
         <!--

@@ -5,6 +5,7 @@ import com.eightbyte.domain.UserExample;
 
 import java.util.List;
 
+import com.eightbyte.vo.RegisterKeyVo;
 import com.eightbyte.vo.UserVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -103,5 +104,7 @@ public interface UserMapper {
     UserVo getUserTasksByUserId(Integer userId);
 
     UserVo selectUserVoRoleByUserName(String userName);
+
+    List<RegisterKeyVo> selectRegisterKeys();
 
 }
