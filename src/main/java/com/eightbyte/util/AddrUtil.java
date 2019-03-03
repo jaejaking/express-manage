@@ -1,22 +1,29 @@
 package com.eightbyte.util;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
+import java.net.*;
 
 /**
  * @author yanghaoran@ehomepay.com.cn
  * @description 距离计算工具类(依赖百度地图开放平台)
  */
+@Slf4j
 public class AddrUtil {
+
+
+    private static final String BEI_JING = "北京";
+    private static final String SHANG_HAI = "上海";
+    private static final String TIAN_JIN = "天津";
+    private static final String CHONG_QING = "重庆";
+
     /**
      * 通过百度地图api获取指定地点经纬度
      *
@@ -107,6 +114,68 @@ public class AddrUtil {
         double[] orgArray = getCoordinate(org);
         double[] endArray = getCoordinate(end);
         return getDistance(orgArray[0], orgArray[1], endArray[0], endArray[1]);
+    }
+
+
+    public static String getCurrentPlace(String url) {
+        if (StringUtils.isBlank(url)) {
+            return "北京";
+        }
+        URL myUrl = null;
+        HttpURLConnection connection = null;
+
+        try {
+            myUrl = new URL(url);
+            connection = (HttpURLConnection) myUrl.openConnection();
+            InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), "GBK");
+            BufferedReader br = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String data = "";
+            while ((data = br.readLine()) != null) {
+                sb.append(data);
+            }
+            String s = sb.toString();
+            String place = "";
+            if (StringUtils.isNotBlank(s)) {
+                s = s.substring(0, s.indexOf(";"));
+            }
+            String province = "";
+            String city = "";
+            if (StringUtils.isNotBlank(s)) {
+                province = s.substring(s.indexOf("lo=") + 3, s.indexOf(","));
+                city = s.substring(s.indexOf(",") + 5);
+            }
+            place = (province + city).replace("\"", "");
+            if (place.indexOf(BEI_JING) != -1) {
+                place = BEI_JING;
+            }
+            if (place.indexOf(SHANG_HAI) != -1) {
+                place = SHANG_HAI;
+            }
+            if (place.indexOf(TIAN_JIN) != -1) {
+                place = TIAN_JIN;
+            }
+            if (place.indexOf(CHONG_QING) != -1) {
+                place = CHONG_QING;
+            }
+
+            return place;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        }
+        return "";
+
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getCurrentPlace("http://ip.ws.126.net/ipquery"));
     }
 
     private AddrUtil() {
