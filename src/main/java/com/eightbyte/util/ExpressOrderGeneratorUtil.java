@@ -69,8 +69,5 @@ public class ExpressOrderGeneratorUtil {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        String s = generateFixLengthOrderNo(32);
-        System.out.println(s + "\t\t\t" + s.length());
-    }
+
 }

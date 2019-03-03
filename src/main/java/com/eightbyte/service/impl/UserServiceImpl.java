@@ -136,7 +136,7 @@ public class UserServiceImpl implements UserService {
     public int generateKeys() {
         String keyName = "";
         for (; ; ) {
-            keyName = ExpressOrderGeneratorUtil.generateFixLengthOrderNo(8);
+            keyName = ExpressOrderGeneratorUtil.genareteRegisterKeys(8);
             RegisterKey registerKey = registerKeyService.selectRegisterKeyByKeyName(keyName);
             if (registerKey == null) {
                 break;
