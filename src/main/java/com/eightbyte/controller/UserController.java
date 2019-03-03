@@ -125,7 +125,7 @@ public class UserController extends BaseController {
             //登录成功存储用户登录信息
             HttpSession session = request.getSession(true);
             session.setAttribute(Constant.LOGIN_SUCCESS_TOKEN, userName);
-            session.setMaxInactiveInterval(60 * 60 * 2);
+            session.setMaxInactiveInterval(60 * 60 * 10);
             return success("登录成功!");
         }
         return error("用户名或者密码错误");
