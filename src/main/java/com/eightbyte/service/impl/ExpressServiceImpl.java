@@ -159,7 +159,7 @@ public class ExpressServiceImpl implements ExpressService {
     public List<ExpressTraceRecord> searchTraceRecordByExpressId(int expressId) {
         ExpressTraceRecordExample expressTraceRecordExample = new ExpressTraceRecordExample();
         expressTraceRecordExample.createCriteria().andExpressIdEqualTo(expressId);
-        expressTraceRecordExample.setOrderByClause("create_time desc");
+        expressTraceRecordExample.setOrderByClause("id desc");
         return traceRecordMapper.selectByExample(expressTraceRecordExample);
     }
 

@@ -222,5 +222,15 @@ public class ExpressController extends BaseController {
         return success("签收成功!");
     }
 
+    @GetMapping("/getTraceRecordDetails")
+    public ResultVo getTranceRecordDetails(Integer expressId) {
+        if (expressId == null || expressId < 0) {
+            return error("参数错误!");
+        }
+        List<ExpressTraceRecord> list = expressService.searchTraceRecordByExpressId(expressId);
+        logger.info("expressTraceRecords:{}", JSON.toJSONString(list));
+        return success(list);
+    }
+
 
 }
