@@ -7,7 +7,7 @@
     <groupId>com.eightbyte</groupId>
     <artifactId>express-manage</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>express-manage</name>
     <description>快递后台管理</description>
@@ -36,8 +36,21 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -183,7 +196,6 @@
                 <version>2.20.1</version>
                 <configuration>
                     <skipTests>true</skipTests>
-                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -204,8 +216,9 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
+                            <finalName>express-manage</finalName>
                             <mainClass>${start-main-class}</mainClass>
-                            <layout>JAR</layout>
+                            <layout>WAR</layout>
                             <outputDirectory>${basedir}/target</outputDirectory>
                         </configuration>
                     </execution>
